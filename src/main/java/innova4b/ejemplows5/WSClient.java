@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 
 public class WSClient 
 {
@@ -64,9 +66,18 @@ public class WSClient
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type","application/json");
 				
-				String input = "{\"marca\":\"Volkswagen\",\"modelo\":\"Tiguan\",\"anyoCompra\":2012,\"matricula\":\"6587HJF\"}";
+				Coche coche = new Coche();
+				coche.setMarca("Volkswagen");
+				coche.setModelo("Polo");
+				coche.setMatricula("3289DJR");
+				coche.setAnyoCompra(2008);
+				
+				//Uso la librería Jackson para pasar de objeto coche a json
+				ObjectMapper mapper = new ObjectMapper();
+				String json = mapper.writeValueAsString(coche);
+
 				OutputStream os = connection.getOutputStream();
-				os.write(input.getBytes());
+				os.write(json.getBytes());
 				os.flush();
 				
 				if (connection.getResponseCode()!=HttpURLConnection.HTTP_CREATED){
